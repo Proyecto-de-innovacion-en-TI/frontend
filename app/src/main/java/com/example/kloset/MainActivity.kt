@@ -11,18 +11,37 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.example.kloset.ui.theme.KlosetTheme
+import com.kloset.ui.navigation.KlosetNavHost
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             KlosetTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                val navController = rememberNavController()
+                val authViewModel: AuthViewModel = ViewModel()
+                val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
+                val hasOnboarding by authViewModel.hasCompletedOnboarding.collectAsState()
+
+                Scaffold(
+                    bottomBar = {
+                        // Ocultar BottomBar en auth y onboarding
+                        val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+                        val showBar = currentRoute in listOf(
+                            Screen.ClosetHome.route,
+                            Screen.OutfitFeed.route,
+                            Screen.MarketplaceHome.route,
+                            Screen.Profile.route
+                        )
+                        if (showBar) KlosetBottomBar(navController)
+                    }
+                ) { padding ->
+                    KlosetNavHost(
+                        navController           = navController,
+                        isLoggedIn              = isLoggedIn,
+                        hasCompletedOnboarding  = hasOnboarding
                     )
                 }
             }
