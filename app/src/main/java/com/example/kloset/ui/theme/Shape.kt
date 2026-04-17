@@ -1,4 +1,4 @@
-package com.kloset.ui.theme
+package com.example.kloset.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Shapes

@@ -4,63 +4,45 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.kloset.ui.navigation.KlosetBottomBar
+import com.example.kloset.ui.navigation.KlosetNavHost
+import com.example.kloset.ui.navigation.Screen
 import com.example.kloset.ui.theme.KlosetTheme
-import com.kloset.ui.navigation.KlosetNavHost
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
             KlosetTheme {
                 val navController = rememberNavController()
-                val authViewModel: AuthViewModel = ViewModel()
-                val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
-                val hasOnboarding by authViewModel.hasCompletedOnboarding.collectAsState()
+                val currentBackStack by navController.currentBackStackEntryAsState()
+                val currentRoute = currentBackStack?.destination?.route
+
+                val showBottomBar = currentRoute in listOf(
+                    Screen.ClosetHome.route,
+                    Screen.OutfitFeed.route,
+                    Screen.MarketplaceHome.route,
+                    Screen.Profile.route
+                )
 
                 Scaffold(
                     bottomBar = {
-                        // Ocultar BottomBar en auth y onboarding
-                        val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
-                        val showBar = currentRoute in listOf(
-                            Screen.ClosetHome.route,
-                            Screen.OutfitFeed.route,
-                            Screen.MarketplaceHome.route,
-                            Screen.Profile.route
-                        )
-                        if (showBar) KlosetBottomBar(navController)
+                        if (showBottomBar) KlosetBottomBar(navController)
                     }
                 ) { padding ->
                     KlosetNavHost(
                         navController           = navController,
-                        isLoggedIn              = isLoggedIn,
-                        hasCompletedOnboarding  = hasOnboarding
+                        isLoggedIn              = false,   // hardcodeado por ahora
+                        hasCompletedOnboarding  = false    // hardcodeado por ahora
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    KlosetTheme {
-        Greeting("Android")
     }
 }

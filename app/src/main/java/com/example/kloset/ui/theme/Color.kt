@@ -1,5 +1,5 @@
 // ui/theme/Color.kt
-package com.kloset.ui.theme
+package com.example.kloset.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

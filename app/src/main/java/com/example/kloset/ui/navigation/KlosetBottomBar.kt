@@ -1,4 +1,4 @@
-package com.kloset.ui.navigation
+package com.example.kloset.ui.navigation
 
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
