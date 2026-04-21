@@ -8,10 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 
-
-@Composable
-fun BodyTypeScreen(onNext: () -> Unit) = PlaceholderScreen("Body Type")
-
 @Composable
 fun ColorimetryScreen(onNext: () -> Unit, onBack: () -> Unit) = PlaceholderScreen("Colorimetry")
 
