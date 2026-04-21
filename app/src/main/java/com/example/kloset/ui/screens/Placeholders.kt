@@ -7,8 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-@Composable
-fun RegisterScreen(onRegistered: () -> Unit, onBack: () -> Unit) = PlaceholderScreen("Register")
+
 
 @Composable
 fun BodyTypeScreen(onNext: () -> Unit) = PlaceholderScreen("Body Type")
