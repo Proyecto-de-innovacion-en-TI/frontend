@@ -11,6 +11,7 @@ import com.example.kloset.ui.screens.auth.LoginScreen
 import com.example.kloset.ui.screens.auth.RegisterScreen
 import com.example.kloset.ui.screens.onboarding.BodyTypeScreen
 import com.example.kloset.ui.screens.onboarding.ColorimetryScreen
+import com.example.kloset.ui.screens.onboarding.PermissionsScreen
 import com.example.kloset.ui.screens.*
 
 @Composable

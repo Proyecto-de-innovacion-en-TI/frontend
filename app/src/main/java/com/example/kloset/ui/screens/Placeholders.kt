@@ -8,11 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 
-@Composable
-fun ColorimetryScreen(onNext: () -> Unit, onBack: () -> Unit) = PlaceholderScreen("Colorimetry")
-
-@Composable
-fun PermissionsScreen(onFinish: () -> Unit) = PlaceholderScreen("Permissions")
 
 @Composable
 fun ClosetHomeScreen(onAddGarment: () -> Unit, onGarmentClick: (String) -> Unit) = PlaceholderScreen("Closet Home")
