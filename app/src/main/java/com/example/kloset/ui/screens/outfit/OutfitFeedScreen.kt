@@ -37,7 +37,7 @@ val sampleOutfits = listOf(
         description = "Un look versátil para el día a día combinando tonos neutros.",
         items = listOf(
             sampleMarketplaceItems[0], // Blazer lino beige
-            sampleMarketplaceItems[1], // Jeans wide leg
+            sampleMarketplaceItems[1],
             sampleMarketplaceItems[4]  // Top de seda blanco
         ),
         author = "Stylist AI",
