@@ -38,7 +38,7 @@ val sampleOutfits = listOf(
         items = listOf(
             sampleMarketplaceItems[0], // Blazer lino beige
             sampleMarketplaceItems[1],
-            sampleMarketplaceItems[4]  // Top de seda blanco
+            sampleMarketplaceItems[4]  // Top de seda blanc
         ),
         author = "Stylist AI",
         likes = 124
