@@ -28,12 +28,6 @@ fun OutfitDetailScreen(outfitId: String, onBack: () -> Unit) = PlaceholderScreen
 fun SavedOutfitsScreen(onOutfitClick: (String) -> Unit, onBack: () -> Unit) = PlaceholderScreen("Saved Outfits")
 
 @Composable
-fun MarketplaceHomeScreen(onProductClick: (String) -> Unit, onSellClick: () -> Unit) = PlaceholderScreen("Marketplace")
-
-@Composable
-fun ProductDetailScreen(productId: String, onBack: () -> Unit) = PlaceholderScreen("Product Detail")
-
-@Composable
 fun SellGarmentScreen(onPublished: () -> Unit, onBack: () -> Unit) = PlaceholderScreen("Sell Garment")
 
 @Composable

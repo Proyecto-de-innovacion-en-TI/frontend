@@ -12,6 +12,9 @@ import com.example.kloset.ui.screens.auth.RegisterScreen
 import com.example.kloset.ui.screens.onboarding.BodyTypeScreen
 import com.example.kloset.ui.screens.onboarding.ColorimetryScreen
 import com.example.kloset.ui.screens.onboarding.PermissionsScreen
+import com.example.kloset.ui.screens.market.MarketplaceHomeScreen
+import com.example.kloset.ui.screens.market.categoryIcon
+import com.example.kloset.ui.screens.outfit.OutfitFeedScreen
 import com.example.kloset.ui.screens.*
 
 @Composable
@@ -141,7 +144,8 @@ fun KlosetNavHost(
             val productId = backStackEntry.arguments?.getString("productId") ?: return@composable
             ProductDetailScreen(
                 productId = productId,
-                onBack    = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                categoryIcon = { category -> categoryIcon(category) }
             )
         }
 
