@@ -14,12 +14,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import java.util.Locale
 import com.example.kloset.ui.screens.market.MarketplaceItem
 import com.example.kloset.ui.screens.market.sampleMarketplaceItems
@@ -51,7 +48,7 @@ val sampleOutfits = listOf(
         title = "Noche de Gala Floral",
         description = "Ideal para eventos semiformales con un toque fresco.",
         items = listOf(
-            sampleMarketplaceItems[2], // Vestido floral midi
+            sampleMarketplaceItems[2], // Vestido floral mid
             sampleMarketplaceItems[3]  // Chaqueta de cuero
         ),
         author = "Trendsetter",
