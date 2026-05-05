@@ -20,6 +20,7 @@ import com.example.kloset.ui.screens.outfit.OutfitDetailScreen
 import com.example.kloset.ui.screens.outfit.OutfitFeedScreen
 import com.example.kloset.ui.screens.closet.KlosetHome
 import com.example.kloset.ui.screens.closet.AddGarmentScreen
+import com.example.kloset.ui.screens.outfit.*
 import com.example.kloset.ui.screens.*
 
 @Composable
@@ -119,16 +120,17 @@ fun KlosetNavHost(
             val outfitId = backStackEntry.arguments?.getString("outfitId") ?: return@composable
             OutfitDetailScreen(
                 outfitId = outfitId,
-                onBack   = { navController.popBackStack() }
+                onBack = { navController.popBackStack() }
             )
         }
-
         composable(Screen.SavedOutfits.route) {
             SavedOutfitsScreen(
                 onOutfitClick = { id -> navController.navigate(Screen.OutfitDetail.createRoute(id)) },
                 onBack        = { navController.popBackStack() }
             )
         }
+
+
 
         composable(Screen.MarketplaceHome.route) {
             MarketplaceHomeScreen(

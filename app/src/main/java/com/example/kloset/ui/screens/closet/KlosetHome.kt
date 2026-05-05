@@ -51,26 +51,12 @@ fun KlosetHome(
             TopAppBar(
                 title = { Text("Mi Armario", fontWeight = FontWeight.Bold) },
                 actions = {
-                    FilledIconButton(
-                        onClick = {
-                            Toast.makeText(context, "Abriendo formulario de prenda...", Toast.LENGTH_SHORT).show()
-                            onAddGarment()
-                        },
-                        modifier = Modifier.padding(end = 8.dp),
-                        colors = IconButtonDefaults.filledIconButtonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary
-                        )
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = "Añadir Prenda")
-                    }
                 }
             )
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    Toast.makeText(context, "Abriendo formulario de prenda...", Toast.LENGTH_SHORT).show()
                     onAddGarment()
                 },
                 containerColor = MaterialTheme.colorScheme.primary,
