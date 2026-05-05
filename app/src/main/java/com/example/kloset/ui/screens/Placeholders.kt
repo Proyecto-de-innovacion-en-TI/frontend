@@ -7,22 +7,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-
-
+// Pantallas que aún no tienen un archivo propio
 @Composable
 fun ClosetHomeScreen(onAddGarment: () -> Unit, onGarmentClick: (String) -> Unit) = PlaceholderScreen("Kloset Home")
 
 @Composable
 fun GarmentDetailScreen(garmentId: String, onBack: () -> Unit, onSellThis: () -> Unit) = PlaceholderScreen("Garment Detail")
-
-@Composable
-fun OutfitFeedScreen(onOutfitClick: (String) -> Unit, onSavedOutfits: () -> Unit) = PlaceholderScreen("Outfit Feed")
-
-@Composable
-fun OutfitDetailScreen(outfitId: String, onBack: () -> Unit) = PlaceholderScreen("Outfit Detail")
-
-@Composable
-fun SavedOutfitsScreen(onOutfitClick: (String) -> Unit, onBack: () -> Unit) = PlaceholderScreen("Saved Outfits")
 
 @Composable
 fun SellGarmentScreen(onPublished: () -> Unit, onBack: () -> Unit) = PlaceholderScreen("Sell Garment")
@@ -33,7 +23,6 @@ fun ProfileScreen(onSettingsClick: () -> Unit) = PlaceholderScreen("Profile")
 @Composable
 fun SettingsScreen(onLogout: () -> Unit, onBack: () -> Unit) = PlaceholderScreen("Settings")
 
-// ── Helper ──────────────────────────────────────────────────────────────────
 @Composable
 private fun PlaceholderScreen(name: String) {
     Box(
@@ -41,17 +30,9 @@ private fun PlaceholderScreen(name: String) {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                text  = name,
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
+            Text(text = name, style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.height(8.dp))
-            Text(
-                text  = "Pantalla en construcción",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Text(text = "Pantalla en construcción", style = MaterialTheme.typography.bodyMedium)
         }
     }
 }

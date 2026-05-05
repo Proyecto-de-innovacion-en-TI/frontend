@@ -15,11 +15,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import java.util.Locale
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
 import com.example.kloset.ui.screens.market.MarketplaceItem
 import com.example.kloset.ui.screens.market.sampleMarketplaceItems
+import java.util.Locale
+
+// ── Modelo de Datos ───────────────────────────────────────────────────────
 
 data class OutfitRecommendation(
     val id: String,
@@ -36,9 +42,9 @@ val sampleOutfits = listOf(
         title = "Casual Chic de Oficina",
         description = "Un look versátil para el día a día combinando tonos neutros.",
         items = listOf(
-            sampleMarketplaceItems[0], // Blazer lino beige
-            sampleMarketplaceItems[1],
-            sampleMarketplaceItems[4]  // Top de seda blanc
+            sampleMarketplaceItems[0], // Blazer beige
+            sampleMarketplaceItems[4], // Top seda
+            sampleMarketplaceItems[1]  // Jeans
         ),
         author = "Stylist AI",
         likes = 124
@@ -48,8 +54,8 @@ val sampleOutfits = listOf(
         title = "Noche de Gala Floral",
         description = "Ideal para eventos semiformales con un toque fresco.",
         items = listOf(
-            sampleMarketplaceItems[2], // Vestido floral mid
-            sampleMarketplaceItems[3]  // Chaqueta de cuero
+            sampleMarketplaceItems[2], // Vestido floral
+            sampleMarketplaceItems[3]  // Chaqueta cuero
         ),
         author = "Trendsetter",
         likes = 89
@@ -59,13 +65,15 @@ val sampleOutfits = listOf(
         title = "Streetwear Utilitario",
         description = "Comodidad y estilo con un toque de tendencia cargo.",
         items = listOf(
-            sampleMarketplaceItems[7], // Pantalón cargo caqui
-            sampleMarketplaceItems[6]  // Cardigan oversize crema
+            sampleMarketplaceItems[7], // Pantalón cargo
+            sampleMarketplaceItems[6]  // Cardigan oversize
         ),
         author = "Kloset Team",
         likes = 215
     )
 )
+
+// ── Pantalla Principal ────────────────────────────────────────────────────
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,7 +84,7 @@ fun OutfitFeedScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Recomendaciones", fontWeight = FontWeight.Bold) },
+                title = { Text("Inspiración", fontWeight = FontWeight.Bold) },
                 actions = {
                     IconButton(onClick = onSavedOutfits) {
                         Icon(Icons.Outlined.BookmarkBorder, contentDescription = "Guardados")
@@ -88,20 +96,10 @@ fun OutfitFeedScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
                 .padding(padding),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            item {
-                Text(
-                    text = "Inspiración para tu estilo",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                Spacer(Modifier.height(8.dp))
-            }
-
             items(sampleOutfits) { outfit ->
                 OutfitCard(
                     outfit = outfit,
@@ -111,6 +109,8 @@ fun OutfitFeedScreen(
         }
     }
 }
+
+// ── Componente de Tarjeta (Mejorado con manejo de Error) ──────────────────
 
 @Composable
 fun OutfitCard(
@@ -123,31 +123,45 @@ fun OutfitCard(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
     ) {
         Column {
-            // Grid de imágenes de los items
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(240.dp)
-                    .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f))
-            ) {
+            // Mosaico de imágenes
+            Box(modifier = Modifier.fillMaxWidth().height(220.dp)) {
                 Row(modifier = Modifier.fillMaxSize()) {
                     outfit.items.take(2).forEachIndexed { index, item ->
                         Box(
                             modifier = Modifier
                                 .weight(1f)
                                 .fillMaxHeight()
-                                .background(Color(item.colorHex).copy(alpha = 0.8f))
-                                .padding(16.dp),
+                                .background(MaterialTheme.colorScheme.surfaceVariant),
                             contentAlignment = Alignment.Center
                         ) {
-                             Text(
-                                text = item.category,
-                                style = MaterialTheme.typography.labelLarge,
-                                color = Color.White
+                            // Cambiamos AsyncImage por SubcomposeAsyncImage para poder usar el bloque 'error'
+                            SubcomposeAsyncImage(
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(item.imageUrl)
+                                    .crossfade(true)
+                                    .build(),
+                                loading = {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(24.dp),
+                                        strokeWidth = 2.dp,
+                                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                                    )
+                                },
+                                error = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.ImageNotSupported,
+                                        contentDescription = "Error al cargar",
+                                        tint = MaterialTheme.colorScheme.outline,
+                                        modifier = Modifier.size(32.dp)
+                                    )
+                                },
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
                             )
                         }
                         if (index == 0 && outfit.items.size > 1) {
@@ -155,96 +169,31 @@ fun OutfitCard(
                         }
                     }
                 }
-
-                // Botón de Like
+                
                 IconButton(
                     onClick = { isLiked = !isLiked },
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(12.dp)
-                        .background(Color.White.copy(alpha = 0.7f), CircleShape)
+                    modifier = Modifier.align(Alignment.TopEnd).padding(8.dp).background(Color.White.copy(0.7f), CircleShape)
                 ) {
                     Icon(
                         imageVector = if (isLiked) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                        contentDescription = "Like",
+                        contentDescription = null,
                         tint = if (isLiked) Color.Red else Color.Black
                     )
                 }
             }
 
-            // Información del Outfit
             Column(modifier = Modifier.padding(16.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = outfit.title,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "Por ${outfit.author}",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+                Text(text = outfit.title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text(text = outfit.description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2)
                 
-                Spacer(Modifier.height(4.dp))
-                
-                Text(
-                    text = outfit.description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 2
-                )
-
                 Spacer(Modifier.height(12.dp))
-
-                // Items list
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    outfit.items.take(3).forEach { item ->
-                        Surface(
-                            shape = CircleShape,
-                            color = Color(item.colorHex).copy(alpha = 0.2f),
-                            modifier = Modifier.size(32.dp),
-                            border = androidx.compose.foundation.BorderStroke(1.dp, Color(item.colorHex))
-                        ) {}
-                    }
-                    if (outfit.items.size > 3) {
-                        Text(
-                            text = "+${outfit.items.size - 3}",
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                    }
-                    
-                    Spacer(Modifier.weight(1f))
-                    
-                    val totalPrice = outfit.items.sumOf { 
-                        it.price.replace(".", "").toIntOrNull() ?: 0 
-                    }
-                    
-                    Text(
-                        text = "Total: $${String.format(Locale.getDefault(), "%,d", totalPrice).replace(",", ".")}",
-                        style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                Spacer(Modifier.height(16.dp))
-
-                Button(
-                    onClick = onClick,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text("Comprar este look")
-                }
+                
+                val totalPrice = outfit.items.sumOf { it.price.replace(".", "").toIntOrNull() ?: 0 }
+                Text(
+                    text = "Look completo por $${String.format(Locale.getDefault(), "%,d", totalPrice).replace(",", ".")}",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
         }
     }

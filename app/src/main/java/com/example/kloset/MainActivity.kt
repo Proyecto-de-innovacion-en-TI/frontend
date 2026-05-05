@@ -4,9 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.kloset.ui.navigation.KlosetBottomBar
@@ -21,8 +22,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             KlosetTheme {
                 val navController = rememberNavController()
-                val currentBackStack by navController.currentBackStackEntryAsState()
-                val currentRoute = currentBackStack?.destination?.route
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
 
                 val showBottomBar = currentRoute in listOf(
                     Screen.ClosetHome.route,
@@ -35,11 +36,12 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         if (showBottomBar) KlosetBottomBar(navController)
                     }
-                ) { padding ->
+                ) { innerPadding ->
                     KlosetNavHost(
                         navController           = navController,
-                        isLoggedIn              = true,   // hardcodeado por ahora
-                        hasCompletedOnboarding  = true    // hardcodeado por ahora
+                        isLoggedIn              = false,
+                        hasCompletedOnboarding  = false,
+                        modifier                = Modifier.padding(innerPadding)
                     )
                 }
             }
