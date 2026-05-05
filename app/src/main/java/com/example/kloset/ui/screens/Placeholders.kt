@@ -10,10 +10,7 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun ClosetHomeScreen(onAddGarment: () -> Unit, onGarmentClick: (String) -> Unit) = PlaceholderScreen("Closet Home")
-
-@Composable
-fun AddGarmentScreen(onSaved: () -> Unit, onBack: () -> Unit) = PlaceholderScreen("Add Garment")
+fun ClosetHomeScreen(onAddGarment: () -> Unit, onGarmentClick: (String) -> Unit) = PlaceholderScreen("Kloset Home")
 
 @Composable
 fun GarmentDetailScreen(garmentId: String, onBack: () -> Unit, onSellThis: () -> Unit) = PlaceholderScreen("Garment Detail")

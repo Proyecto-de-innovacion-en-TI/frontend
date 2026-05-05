@@ -73,7 +73,14 @@ fun KlosetBottomBar(navController: NavController) {
                         contentDescription = item.label
                     )
                 },
-                label = { Text(item.label) }
+                label = { Text(item.label) },
+                colors = NavigationBarItemDefaults.colors(
+                    indicatorColor = MaterialTheme.colorScheme.primary,
+                    selectedIconColor = MaterialTheme.colorScheme.onPrimary,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             )
         }
     }

@@ -38,8 +38,8 @@ class MainActivity : ComponentActivity() {
                 ) { padding ->
                     KlosetNavHost(
                         navController           = navController,
-                        isLoggedIn              = false,   // hardcodeado por ahora
-                        hasCompletedOnboarding  = false    // hardcodeado por ahora
+                        isLoggedIn              = true,   // hardcodeado por ahora
+                        hasCompletedOnboarding  = true    // hardcodeado por ahora
                     )
                 }
             }

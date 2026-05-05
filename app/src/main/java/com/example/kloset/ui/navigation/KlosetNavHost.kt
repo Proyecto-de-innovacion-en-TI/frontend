@@ -15,6 +15,8 @@ import com.example.kloset.ui.screens.onboarding.PermissionsScreen
 import com.example.kloset.ui.screens.market.MarketplaceHomeScreen
 import com.example.kloset.ui.screens.market.categoryIcon
 import com.example.kloset.ui.screens.outfit.OutfitFeedScreen
+import com.example.kloset.ui.screens.closet.KlosetHome
+import com.example.kloset.ui.screens.closet.AddGarmentScreen
 import com.example.kloset.ui.screens.*
 
 @Composable
@@ -78,7 +80,7 @@ fun KlosetNavHost(
 
         // ── CLOSET ──────────────────────────────────────────────────────
         composable(Screen.ClosetHome.route) {
-            ClosetHomeScreen(
+            KlosetHome(
                 onAddGarment     = { navController.navigate(Screen.AddGarment.route) },
                 onGarmentClick   = { id -> navController.navigate(Screen.GarmentDetail.createRoute(id)) }
             )
