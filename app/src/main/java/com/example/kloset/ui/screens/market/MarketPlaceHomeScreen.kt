@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.*
@@ -18,13 +17,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
 
 // ── Modelos de datos ──────────────────────────────────────────────────────
 
@@ -33,11 +34,11 @@ data class MarketplaceItem(
     val title: String,
     val brand: String,
     val size: String,
-    val price: String,      // null = intercambio
+    val price: String,
     val isExchange: Boolean,
-    val condition: String,  // "Nuevo", "Como nuevo", "Buen estado", "Usado"
+    val condition: String,
     val category: String,
-    val colorHex: Long,     // color representativo de la prenda
+    val imageUrl: String,
     val sellerName: String,
     val sellerCity: String,
     val isFavorited: Boolean = false
@@ -48,50 +49,58 @@ val sampleMarketplaceItems = listOf(
         id = "1", title = "Blazer lino beige", brand = "Zara",
         size = "M", price = "85.000", isExchange = false,
         condition = "Como nuevo", category = "Tops",
-        colorHex = 0xFFD4C5A9L, sellerName = "Valentina R.", sellerCity = "Bogotá"
+        imageUrl = "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=500&auto=format&fit=crop",
+        sellerName = "Valentina R.", sellerCity = "Bogotá"
     ),
     MarketplaceItem(
         id = "2", title = "Jeans wide leg", brand = "Mango",
         size = "28", price = "60.000", isExchange = false,
         condition = "Buen estado", category = "Pantalones",
-        colorHex = 0xFF3A5A8AL, sellerName = "Camila T.", sellerCity = "Medellín"
+        imageUrl = "https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=500&auto=format&fit=crop",
+        sellerName = "Camila T.", sellerCity = "Medellín"
     ),
     MarketplaceItem(
         id = "3", title = "Vestido floral midi", brand = "H&M",
         size = "S", price = "75.000", isExchange = false,
         condition = "Como nuevo", category = "Vestidos",
-        colorHex = 0xFFE8A0A0L, sellerName = "Sara M.", sellerCity = "Cali",
+        imageUrl = "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=500&auto=format&fit=crop",
+        sellerName = "Sara M.", sellerCity = "Cali",
         isFavorited = true
     ),
     MarketplaceItem(
         id = "4", title = "Chaqueta de cuero", brand = "Stradivarius",
         size = "M", price = "120.000", isExchange = false,
         condition = "Nuevo", category = "Abrigos",
-        colorHex = 0xFF2A1A0AL, sellerName = "Laura P.", sellerCity = "Bogotá"
+        imageUrl = "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=500&auto=format&fit=crop",
+        sellerName = "Laura P.", sellerCity = "Bogotá"
     ),
     MarketplaceItem(
         id = "5", title = "Top de seda blanco", brand = "Pull&Bear",
         size = "XS", price = "55.000", isExchange = false,
         condition = "Nuevo", category = "Tops",
-        colorHex = 0xFFF5F0EAL, sellerName = "Isabela V.", sellerCity = "Barranquilla"
+        imageUrl = "https://images.unsplash.com/photo-1515347648399-0f374c43e80d?q=80&w=500&auto=format&fit=crop",
+        sellerName = "Isabela V.", sellerCity = "Barranquilla"
     ),
     MarketplaceItem(
         id = "6", title = "Falda plisada verde", brand = "Shein",
         size = "L", price = "35.000", isExchange = false,
         condition = "Buen estado", category = "Faldas",
-        colorHex = 0xFF5A8A5AL, sellerName = "Ana G.", sellerCity = "Medellín"
+        imageUrl = "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=500&auto=format&fit=crop",
+        sellerName = "Ana G.", sellerCity = "Medellín"
     ),
     MarketplaceItem(
         id = "7", title = "Cardigan oversize crema", brand = "Bershka",
         size = "M/L", price = "45.000", isExchange = false,
         condition = "Como nuevo", category = "Tops",
-        colorHex = 0xFFE8DFD0L, sellerName = "Sofía N.", sellerCity = "Bogotá"
+        imageUrl = "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=500&auto=format&fit=crop",
+        sellerName = "Sofía N.", sellerCity = "Bogotá"
     ),
     MarketplaceItem(
         id = "8", title = "Pantalón cargo caqui", brand = "Zara",
         size = "38", price = "70.000", isExchange = false,
         condition = "Buen estado", category = "Pantalones",
-        colorHex = 0xFF8A7A5AL, sellerName = "Daniela C.", sellerCity = "Cali"
+        imageUrl = "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=500&auto=format&fit=crop",
+        sellerName = "Daniela C.", sellerCity = "Cali"
     ),
 )
 
@@ -106,7 +115,7 @@ fun MarketplaceHomeScreen(
     onSellClick: () -> Unit
 ) {
     var selectedCategory by remember { mutableStateOf("Todo") }
-    var selectedFilter by remember { mutableStateOf("Todo") } // "Todo", "Venta"
+    var selectedFilter by remember { mutableStateOf("Todo") }
     var searchQuery by remember { mutableStateOf("") }
     var favoritedItems by remember { mutableStateOf(sampleMarketplaceItems.filter { it.isFavorited }.map { it.id }.toSet()) }
 
@@ -136,7 +145,6 @@ fun MarketplaceHomeScreen(
                 .padding(innerPadding),
             contentPadding = PaddingValues(bottom = 100.dp)
         ) {
-            // ── Header ────────────────────────────────────────────────
             item {
                 Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Spacer(Modifier.height(20.dp))
@@ -153,7 +161,6 @@ fun MarketplaceHomeScreen(
                     )
                     Spacer(Modifier.height(16.dp))
 
-                    // Barra de búsqueda
                     OutlinedTextField(
                         value = searchQuery,
                         onValueChange = { searchQuery = it },
@@ -174,7 +181,6 @@ fun MarketplaceHomeScreen(
                 }
             }
 
-            // ── Filtros ──────────────────────────────────────────────
             item {
                 Row(
                     modifier = Modifier.padding(horizontal = 20.dp),
@@ -195,7 +201,6 @@ fun MarketplaceHomeScreen(
                 Spacer(Modifier.height(8.dp))
             }
 
-            // ── Categorías ────────────────────────────────────────────
             item {
                 LazyRow(
                     contentPadding = PaddingValues(horizontal = 20.dp),
@@ -226,7 +231,6 @@ fun MarketplaceHomeScreen(
                 Spacer(Modifier.height(16.dp))
             }
 
-            // ── Contador de resultados ────────────────────────────────
             item {
                 Text(
                     text = "${filtered.size} prendas encontradas",
@@ -237,7 +241,6 @@ fun MarketplaceHomeScreen(
                 Spacer(Modifier.height(12.dp))
             }
 
-            // ── Grid de prendas (2 columnas simuladas con Row) ────────
             val chunked = filtered.chunked(2)
             items(chunked) { rowItems ->
                 Row(
@@ -261,13 +264,11 @@ fun MarketplaceHomeScreen(
                             modifier = Modifier.weight(1f)
                         )
                     }
-                    // Rellena si la fila tiene un solo item
                     if (rowItems.size == 1) Spacer(Modifier.weight(1f))
                 }
                 Spacer(Modifier.height(12.dp))
             }
 
-            // Estado vacío
             if (filtered.isEmpty()) {
                 item {
                     Column(
@@ -300,7 +301,7 @@ fun MarketplaceHomeScreen(
     }
 }
 
-// ── Card individual de prenda ─────────────────────────────────────────────
+// ── Card individual de prenda (Mejorado con manejo de Carga y Error) ──────
 
 @Composable
 private fun MarketplaceItemCard(
@@ -320,31 +321,38 @@ private fun MarketplaceItemCard(
         shape = MaterialTheme.shapes.medium
     ) {
         Column {
-            // Imagen simulada con color de prenda
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(160.dp)
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                Color(item.colorHex).copy(alpha = 0.9f),
-                                Color(item.colorHex).copy(alpha = 0.6f)
-                            )
-                        )
-                    )
+                    .height(180.dp)
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                contentAlignment = Alignment.Center
             ) {
-                // Ícono de categoría centrado
-                Icon(
-                    imageVector = categoryIcon(item.category),
-                    contentDescription = null,
-                    tint = Color.White.copy(alpha = 0.7f),
-                    modifier = Modifier
-                        .size(56.dp)
-                        .align(Alignment.Center)
+                SubcomposeAsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(item.imageUrl)
+                        .crossfade(true)
+                        .build(),
+                    loading = {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 2.dp,
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                        )
+                    },
+                    error = {
+                        Icon(
+                            imageVector = Icons.Outlined.ImageNotSupported,
+                            contentDescription = "Error al cargar",
+                            tint = MaterialTheme.colorScheme.outline,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    },
+                    contentDescription = item.title,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
                 )
 
-                // Badge condición
                 Surface(
                     modifier = Modifier
                         .padding(8.dp)
@@ -360,7 +368,6 @@ private fun MarketplaceItemCard(
                     )
                 }
 
-                // Badge intercambio
                 if (item.isExchange) {
                     Surface(
                         modifier = Modifier
@@ -389,7 +396,6 @@ private fun MarketplaceItemCard(
                     }
                 }
 
-                // Botón favorito
                 IconButton(
                     onClick = onFavoriteToggle,
                     modifier = Modifier
@@ -410,7 +416,6 @@ private fun MarketplaceItemCard(
                 }
             }
 
-            // Info de la prenda
             Column(modifier = Modifier.padding(10.dp)) {
                 Text(
                     text = item.title,
@@ -465,7 +470,6 @@ private fun MarketplaceItemCard(
     }
 }
 
-// Icono según categoría
 fun categoryIcon(category: String): ImageVector = when (category) {
     "Tops" -> Icons.Outlined.Checkroom
     "Pantalones" -> Icons.Outlined.Straighten

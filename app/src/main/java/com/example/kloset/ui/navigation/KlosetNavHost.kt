@@ -1,29 +1,32 @@
-// navigation/KlosetNavHost.kt
 package com.example.kloset.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.kloset.ui.screens.*
 import com.example.kloset.ui.screens.auth.LoginScreen
 import com.example.kloset.ui.screens.auth.RegisterScreen
+import com.example.kloset.ui.screens.market.MarketplaceHomeScreen
+import com.example.kloset.ui.screens.market.ProductDetailScreen
+import com.example.kloset.ui.screens.market.categoryIcon
 import com.example.kloset.ui.screens.onboarding.BodyTypeScreen
 import com.example.kloset.ui.screens.onboarding.ColorimetryScreen
 import com.example.kloset.ui.screens.onboarding.PermissionsScreen
-import com.example.kloset.ui.screens.market.MarketplaceHomeScreen
-import com.example.kloset.ui.screens.market.categoryIcon
+import com.example.kloset.ui.screens.outfit.OutfitDetailScreen
 import com.example.kloset.ui.screens.outfit.OutfitFeedScreen
-import com.example.kloset.ui.screens.*
+import com.example.kloset.ui.screens.outfit.SavedOutfitsScreen
 
 @Composable
 fun KlosetNavHost(
     navController: NavHostController,
-    isLoggedIn: Boolean,           // viene del AuthViewModel
-    hasCompletedOnboarding: Boolean
+    isLoggedIn: Boolean,
+    hasCompletedOnboarding: Boolean,
+    modifier: Modifier = Modifier
 ) {
-    // Punto de entrada dinámico
     val startDestination = when {
         !isLoggedIn             -> Screen.Login.route
         !hasCompletedOnboarding -> Screen.BodyType.route
@@ -32,10 +35,9 @@ fun KlosetNavHost(
 
     NavHost(
         navController    = navController,
-        startDestination = startDestination
+        startDestination = startDestination,
+        modifier         = modifier
     ) {
-
-        // ── AUTH ────────────────────────────────────────────────────────
         composable(Screen.Login.route) {
             LoginScreen(
                 onLoginSuccess  = { navController.navigate(Screen.ClosetHome.route) {
@@ -54,7 +56,6 @@ fun KlosetNavHost(
             )
         }
 
-        // ── ONBOARDING ──────────────────────────────────────────────────
         composable(Screen.BodyType.route) {
             BodyTypeScreen(
                 onNext = { navController.navigate(Screen.Colorimetry.route) }
@@ -76,7 +77,6 @@ fun KlosetNavHost(
             )
         }
 
-        // ── CLOSET ──────────────────────────────────────────────────────
         composable(Screen.ClosetHome.route) {
             ClosetHomeScreen(
                 onAddGarment     = { navController.navigate(Screen.AddGarment.route) },
@@ -103,7 +103,6 @@ fun KlosetNavHost(
             )
         }
 
-        // ── OUTFITS ─────────────────────────────────────────────────────
         composable(Screen.OutfitFeed.route) {
             OutfitFeedScreen(
                 onOutfitClick  = { id -> navController.navigate(Screen.OutfitDetail.createRoute(id)) },
@@ -129,7 +128,6 @@ fun KlosetNavHost(
             )
         }
 
-        // ── MARKETPLACE ─────────────────────────────────────────────────
         composable(Screen.MarketplaceHome.route) {
             MarketplaceHomeScreen(
                 onProductClick = { id -> navController.navigate(Screen.ProductDetail.createRoute(id)) },
@@ -156,7 +154,6 @@ fun KlosetNavHost(
             )
         }
 
-        // ── PERFIL ──────────────────────────────────────────────────────
         composable(Screen.Profile.route) {
             ProfileScreen(
                 onSettingsClick = { navController.navigate(Screen.Settings.route) }
@@ -173,5 +170,3 @@ fun KlosetNavHost(
         }
     }
 }
-
-
