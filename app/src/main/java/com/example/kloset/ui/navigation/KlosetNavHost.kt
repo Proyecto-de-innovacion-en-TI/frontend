@@ -22,6 +22,8 @@ import com.example.kloset.ui.screens.closet.KlosetHome
 import com.example.kloset.ui.screens.closet.AddGarmentScreen
 import com.example.kloset.ui.screens.outfit.*
 import com.example.kloset.ui.screens.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.kloset.viewmodel.GarmentViewModel
 
 @Composable
 fun KlosetNavHost(
@@ -30,6 +32,7 @@ fun KlosetNavHost(
     hasCompletedOnboarding: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val garmentViewModel: GarmentViewModel = viewModel()
     val startDestination = when {
         !isLoggedIn             -> Screen.Login.route
         !hasCompletedOnboarding -> Screen.BodyType.route
@@ -82,6 +85,7 @@ fun KlosetNavHost(
 
         composable(Screen.ClosetHome.route) {
             KlosetHome(
+                viewModel        = garmentViewModel,
                 onAddGarment     = { navController.navigate(Screen.AddGarment.route) },
                 onGarmentClick   = { id -> navController.navigate(Screen.GarmentDetail.createRoute(id)) }
             )
@@ -89,6 +93,7 @@ fun KlosetNavHost(
 
         composable(Screen.AddGarment.route) {
             AddGarmentScreen(
+                viewModel        = garmentViewModel,
                 onSaved = { navController.popBackStack() },
                 onBack  = { navController.popBackStack() }
             )
