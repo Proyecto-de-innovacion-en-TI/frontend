@@ -75,10 +75,10 @@ val sampleMarketplaceItems = listOf(
         sellerName = "Laura P.", sellerCity = "Bogotá"
     ),
     MarketplaceItem(
-        id = "5", title = "Top de seda blanco", brand = "Pull&Bear",
+        id = "5", title = "Zapatillas Urbanas", brand = "Pull&Bear",
         size = "XS", price = "55.000", isExchange = false,
         condition = "Nuevo", category = "Tops",
-        imageUrl = "https://images.unsplash.com/photo-1515347648399-0f374c43e80d?q=80&w=500&auto=format&fit=crop",
+        imageUrl = "https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=400",
         sellerName = "Isabela V.", sellerCity = "Barranquilla"
     ),
     MarketplaceItem(
